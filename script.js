@@ -1,7 +1,6 @@
 const n = 20;
-const arr = [];
-
-init();
+let bubbleArr = [];
+let insertionArr = [];
 
 let audioctx = null;
 
@@ -17,33 +16,46 @@ function playnote(freq) {
     const dur = 0.1;
     const osc = audioctx.createOscillator();
     const gainNode = audioctx.createGain();
-    
+
     osc.frequency.value = freq;
     osc.connect(gainNode);
     gainNode.gain.value = 0.1;
-    
+    gainNode.gain.linearRampToValueAtTime(
+        0,audioctx.currentTime+dur
+    )
     gainNode.connect(audioctx.destination);
-    
+
     osc.start();
     osc.stop(audioctx.currentTime + dur);
 }
 
 function init() {
+    bubbleArr = [];
+    insertionArr = [];
     for (let i = 0; i < n; i++) {
-        arr[i] = Math.random();
+        const randomValue = Math.random();
+        bubbleArr.push(randomValue);
+        insertionArr.push(randomValue);
     }
-    showbars();
+    showbars(bubbleArr, 'bubble-container');
+    showbars(insertionArr, 'insertion-container');
 }
 
-function play() {
-    const copy = [...arr];
+function playBubbleSort() {
+    const copy = [...bubbleArr];
     const moves = bubblesort(copy);
-    animate(moves);
+    animate(moves, bubbleArr, 'bubble-container');
 }
 
-function animate(moves) {
+function playInsertionSort() {
+    const copy = [...insertionArr];
+    const moves = insertionsort(copy);
+    animate(moves, insertionArr, 'insertion-container');
+}
+
+function animate(moves, arr, containerId) {
     if (moves.length === 0) {
-        showbars();
+        showbars(arr, containerId);
         return;
     }
 
@@ -56,18 +68,17 @@ function animate(moves) {
 
     playnote(200 + arr[i] * 500);
     playnote(200 + arr[j] * 500);
-    showbars(move);
+    showbars(arr, containerId, move);
 
     setTimeout(() => {
-        animate(moves);
-    }, 200);
+        animate(moves, arr, containerId);
+    }, 20);
 }
 
 function bubblesort(arr) {
     const moves = [];
     do {
         var swapped = false;
-
         for (let i = 1; i < arr.length; i++) {
             moves.push({
                 indices: [i - 1, i], type: "comp"
@@ -81,12 +92,29 @@ function bubblesort(arr) {
             }
         }
     } while (swapped);
-
     return moves;
 }
 
-function showbars(move) {
-    const container = document.getElementById('container');
+function insertionsort(arr) {
+    const moves = [];
+    for (let i = 1; i < arr.length; i++) {
+        let j = i;
+        while (j > 0 && arr[j - 1] > arr[j]) {
+            moves.push({
+                indices: [j - 1, j], type: "comp"
+            });
+            moves.push({
+                indices: [j - 1, j], type: "swap"
+            });
+            [arr[j - 1], arr[j]] = [arr[j], arr[j - 1]];
+            j--;
+        }
+    }
+    return moves;
+}
+
+function showbars(arr, containerId, move) {
+    const container = document.getElementById(containerId);
     container.innerHTML = "";
     for (let i = 0; i < arr.length; i++) {
         const bar = document.createElement("div");

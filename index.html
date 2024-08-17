@@ -4,22 +4,63 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sorting Visualizer</title>
-    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
 
+        h1, h2 {
+            color: #333;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            margin: 20px auto;
+            width: 80%;
+            height: 200px;
+            background-color: #e0e0e0;
+        }
+
+        .bar {
+            width: 5%;
+            margin: 0 2px;
+            background-color: #3498db;
+            transition: background-color 0.2s ease;
+        }
+
+        button {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
-    <h1>
-        Sorting Visualizer 
-    </h1>
-    <div id="container">
+    <h1>Sorting Visualizer</h1>
 
+    <div>
+        <h2>Bubble Sort</h2>
+        <div id="bubble-container" class="container"></div>
+    </div>
+    
+    <div>
+        <h2>Insertion Sort</h2>
+        <div id="insertion-container" class="container"></div>
     </div>
 
     <hr>
 
     <div>
-        <button onclick="init()">init</button>;
-        <button onclick="play()">play</button>;
+        <button onclick="init()">Initialize Arrays</button>
+        <button onclick="playInsertionSort()">Play Insertion Sort</button>
+        <button onclick="playBubbleSort()">Play Bubble Sort</button>
     </div>
 
     <script src="script.js"></script>
